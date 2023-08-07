@@ -16,6 +16,8 @@ var (
 )
 
 func registerRouter(r *gin.RouterGroup) {
+	r.Use(middleware.Logging())
+
 	r.GET("/api/ping", handler.Ping)
 	r.POST("/api/omnibus", handler.Omnibus)
 }
@@ -35,7 +37,6 @@ func init() {
 	})
 
 	r := app.Group("/")
-	r.Use(middleware.Logging())
 	// register route
 	registerRouter(r)
 }

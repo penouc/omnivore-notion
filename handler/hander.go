@@ -13,6 +13,7 @@ func Ping(c *gin.Context) {
 // Omnibus是一个 post 接口
 // 输出所有post数据
 func Omnibus(c *gin.Context) {
+	println("Omnibus" + c.Request.PostForm.Encode())
 	c.JSON(http.StatusOK, c.Request.PostForm)
 }
 
