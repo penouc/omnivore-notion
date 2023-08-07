@@ -1,24 +1,45 @@
 package middleware
 
 import (
-	"log"
+	"bytes"
+	"fmt"
 	"time"
 
 	"github.com/gin-gonic/gin"
 )
 
+type bodyLogWriter struct {
+	gin.ResponseWriter
+	body *bytes.Buffer
+}
+
+func (w bodyLogWriter) Write(b []byte) (int, error) {
+	w.body.Write(b)
+	return w.ResponseWriter.Write(b)
+}
+
 func Logging() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		startTime := time.Now()
+		// Start timer
+		start := time.Now()
 
+		// Wrap the ResponseWriter
+		writer := &bodyLogWriter{body: bytes.NewBufferString(""), ResponseWriter: c.Writer}
+		c.Writer = writer
+
+		// 打印请求信息
+		reqBody, _ := c.GetRawData()
+		fmt.Printf("[INFO] Request: %s %s %s\n", c.Request.Method, c.Request.RequestURI, reqBody)
+
+		// Process request
 		c.Next()
 
-		log.Printf("%s - %s %s %d %s",
-			startTime.Format("2006-01-02 15:04:05"),
-			c.Request.Method,
-			c.Request.URL,
-			c.Writer.Status(),
-			time.Since(startTime),
-		)
+		// Save end time
+		end := time.Now()
+		latency := end.Sub(start)
+
+		respBody := writer.body.String()
+
+		fmt.Printf("[INFO] Response: %s %s %s (%v)\n", c.Request.Method, c.Request.RequestURI, respBody, latency)
 	}
 }
