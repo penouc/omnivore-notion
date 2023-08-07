@@ -10,9 +10,10 @@ func Ping(c *gin.Context) {
 	c.String(http.StatusOK, "pong")
 }
 
-// 输出所有参数
+// Omnibus是一个 post 接口
+// 输出所有post数据
 func Omnibus(c *gin.Context) {
-	c.JSON(http.StatusOK, c.Request.URL.Query())
+	c.JSON(http.StatusOK, c.Request.PostForm)
 }
 
 func ErrRouter(c *gin.Context) {
