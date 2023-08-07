@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/penouc/golang/handler"
+	"github.com/penouc/golang/middleware"
 
 	"github.com/gin-gonic/gin"
 )
@@ -16,6 +17,7 @@ var (
 
 func registerRouter(r *gin.RouterGroup) {
 	r.GET("/api/ping", handler.Ping)
+	r.GET("/api/omnibus", handler.Omnibus)
 }
 
 // init gin app
@@ -33,7 +35,7 @@ func init() {
 	})
 
 	r := app.Group("/")
-
+	r.Use(middleware.Logging())
 	// register route
 	registerRouter(r)
 }
