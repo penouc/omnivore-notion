@@ -2,11 +2,22 @@ package middleware
 
 import (
 	"bytes"
+	"context"
+	"os"
 	"fmt"
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/redis/go-redis/v9"
 )
+
+var ctx = context.Background()
+var url = os.Getenv("KV_URL")
+var opts, err = redis.ParseURL(url)
+if err != nil {
+	panic(err)
+}
+var rdb = redis.NewClient(opts)
 
 type bodyLogWriter struct {
 	gin.ResponseWriter
@@ -31,6 +42,10 @@ func Logging() gin.HandlerFunc {
 		reqBody, _ := c.GetRawData()
 		fmt.Printf("[INFO] Request: %s %s %s\n", c.Request.Method, c.Request.RequestURI, reqBody)
 
+		err := rdb.Set(ctx, "hahaha", reqBody, 0).Err()
+		if err != nil {
+			panic(err)
+		}
 		// Process request
 		c.Next()
 
