@@ -3,8 +3,8 @@ package middleware
 import (
 	"bytes"
 	"context"
-	"os"
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -14,11 +14,18 @@ import (
 var ctx = context.Background()
 var url = os.Getenv("KV_URL")
 
-var opts, err = redis.ParseURL(url)
-if err != nil {
-	panic(err)
-}
+var opts = getOpts()
 var rdb = redis.NewClient(opts)
+
+func getOpts() *redis.Options {
+	var opts, err = redis.ParseURL(url)
+	fmt.Printf("[INFO] URL: %s %s\n", url, opts)
+
+	if err != nil {
+		panic(err)
+	}
+	return opts
+}
 
 type bodyLogWriter struct {
 	gin.ResponseWriter
@@ -57,8 +64,6 @@ func Logging() gin.HandlerFunc {
 		respBody := writer.body.String()
 
 		fmt.Printf("[INFO] Response: %s %s %s (%v)\n", c.Request.Method, c.Request.RequestURI, respBody, latency)
-		
-		fmt.Printf("[INFO] URL: %s \n", url)
-	
+
 	}
 }
