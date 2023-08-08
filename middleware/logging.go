@@ -13,6 +13,7 @@ import (
 
 var ctx = context.Background()
 var url = os.Getenv("KV_URL")
+
 var opts, err = redis.ParseURL(url)
 if err != nil {
 	panic(err)
@@ -56,5 +57,8 @@ func Logging() gin.HandlerFunc {
 		respBody := writer.body.String()
 
 		fmt.Printf("[INFO] Response: %s %s %s (%v)\n", c.Request.Method, c.Request.RequestURI, respBody, latency)
+		
+		fmt.Printf("[INFO] URL: %s \n", url)
+	
 	}
 }
