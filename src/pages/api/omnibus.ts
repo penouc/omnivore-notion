@@ -30,8 +30,8 @@ export default async function handler(
             // 然后判断长度是否大于 1000， 如果大于 1000 就截取前 1000 个字符
 
             if (typeof element2 === 'string') {
-              if (element2.length > 1000) {
-                element[key2] = element2.slice(0, 1000)
+              if (element2.length > 100) {
+                element[key2] = element2.slice(0, 100)
               } else {
                 element[key2] = element2
               }
