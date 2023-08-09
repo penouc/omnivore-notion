@@ -14,7 +14,7 @@ export default async function handler(
 ) {
   // 输出 post 请求的 body
 
-  const newObj = {}
+  const newObj: {[key: string]: any} = {}
 
   // 遍历 post 请求的 body
   for (const key in req.body) {
