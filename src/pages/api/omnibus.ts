@@ -15,8 +15,7 @@ export default async function handler(
   // 输出 post 请求的 body
   console.log('request body ===>', req.body)
 
-  await kv.set("user_1_session", "session_token_value");
-  const session = await kv.get("user_1_session");
+  await kv.set("loging_data", JSON.stringify(req.body));
 
   res.status(200).json({ name: 'John Doe' })
 }
